@@ -1,36 +1,30 @@
-[ [Intro](README.md) ] -- [ [Preparations](raspibolt_10_preparations.md) ] -- [ **Raspberry Pi** ] -- [ [Bitcoin](raspibolt_30_bitcoin.md) ] -- [ [Lightning](raspibolt_40_lnd.md) ] -- [ [Mainnet](raspibolt_50_mainnet.md) ] -- [ [Bonus](raspibolt_60_bonus.md) ] -- [ [Troubleshooting](raspibolt_70_troubleshooting.md) ]
+[ [Intro](README.md) ] -- [ [Preparations](aganode_10_preparations.md) ] -- [ **Raspberry Pi** ] -- [ [Bitcoin](aganode_30_bitcoin.md) ] -- [ [Lightning](aganode_40_lnd.md) ] -- [ [Mainnet](aganode_50_mainnet.md) ] -- [ [Bonus](aganode_60_bonus.md) ] -- [ [Troubleshooting](aganode_70_troubleshooting.md) ]
 
 -------
 ### Beginner’s Guide to ️⚡Lightning️⚡ on a Raspberry Pi
 --------
 
-# Raspberry Pi
+# ODROID-UC2
 
 ## Write down your passwords
 You will need several passwords and I find it easiest to write them all down in the beginning, instead of bumping into them throughout the guide. They should be unique and very secure, at least 12 characters in length. Do **not use uncommon special characters**, spaces or quotes (‘ or “).
 ```
-[ A ] Master user password
-[ B ] Bitcoin RPC password
-[ C ] LND wallet password
-[ D ] LND seed password (optional)
+[ A ] root user password
+[ B ] admin user password
+[ C ] Bitcoin RPC password
+[ D ] LND wallet password
 ```
-![xkcd: Password Strength](images/20_xkcd_password_strength.png)
 
 If you need inspiration for creating your passwords: the [xkcd: Password Strength](https://xkcd.com/936/) comic is funny and contains a lot of truth. Store a copy of your passwords somewhere safe (preferably in a password manager like [KeePass](https://keepass.info/)) and keep your original notes out of sight once your system is up and running.
 
 ## Preparing the operating system
-The node runs headless, that means without keyboard or display, so the operating system Raspbian Stretch Lite is used. 
+The node runs headless, that means without keyboard or display, so the operating system Ubuntu Server is used. 
 
-1. Download the [Raspbian Stretch Lite](https://www.raspberrypi.org/downloads/raspbian/) disk image
-2. Write the disk image to your SD card with [this guide](https://www.raspberrypi.org/documentation/installation/installing-images/README.md)
-
-### Enable Secure Shell
-Without keyboard or screen, no direct interaction with the Pi is possible during the initial setup. After writing the image to the Micro SD card, create an empty file called “ssh” (without extension) in the main directory of the card. This causes the Secure Shell (ssh) to be enabled from the start and we will be able to login remotely. 
-
-* Create a file `ssh` in the boot partition of the MicroSD card
+1. Download the [Ubuntu Minimal 18.04.1 LTS (v1.1)](https://wiki.odroid.com/odroid-xu4/os_images/linux/ubuntu_4.14/20181203-minimal) disk image
+2. Write the disk image to your SD card using balenaEtcher
 
 ### Prepare Wifi 
-I would not recommend it, but you can run your RaspiBolt with a wireless network connection. To avoid using a network cable for the initial setup, you can pre-configure the wireless settings:
+I would not recommend it, but you can run your ODROID with a wireless network connection. To avoid using a network cable for the initial setup, you can pre-configure the wireless settings:
 
 * Create a file `wpa_supplicant.conf` on the MicroSD card with the following content. Note that the network name (ssid) and password need to be in double-quotes (like `psk="password"`)  
 ```
@@ -45,15 +39,14 @@ network={
 * Replace `[COUNTRY_CODE]` with the [ISO2 code](https://www.iso.org/obp/ui/#search) of your country (eg. `US`)
 * Replace `[WIFI_SSID]` and `[WIFI_PASSWORD]` with the credentials for your own WiFi.
 
-
-### Start your Pi
+### Start your ODROID
 * Safely eject the sd card from your computer
-* Insert the sd card into the Pi
-* If you did not already setup Wifi: connect the Pi to your network with an ethernet cable
-* Start the Pi by connecting it to the mobile phone charger using the Micro USB cable
+* Insert the sd card into the ODROID
+* If you did not already setup Wifi: connect the ODROID to your network with an ethernet cable
+* Start the ODROID by connecting the power cable
 
 ## Connecting to the network
-The Pi is starting and getting a new address from your home network. This address can change over time. To make the Pi reachable from the internet, we assign it a fixed address.
+The ODROID is starting and getting a new address from your home network. This address can change over time. To make the Pi reachable from the internet, we assign it a fixed address.
 
 ### Accessing your router
 The fixed address is configured in your network router: this can be the cable modem or the Wifi access point. So we first need to access the router. To find out its address, 
@@ -97,7 +90,7 @@ Save and apply these router settings, we will check them later. Disconnect the P
 
 ![Fixed network address](images/20_net2_fixedip.png)
 
-## Working on the Raspberry Pi
+## Working on the ODROID
 ### Introduction to the command line
 We are going to work on the command line of the Pi, which may be new to you. Find some basic information below, it will help you navigate and interact with your Pi.
 
@@ -115,7 +108,7 @@ $ ls -la
 
 * **Command history**: by pressing :arrow_up: and :arrow_down: on your keyboard, you can recall your previously entered commands.
 
-* **Common Linux commands**: For a very selective reference list of Linux commands, please refer to the [FAQ](raspibolt_faq.md) page.
+* **Common Linux commands**: For a very selective reference list of Linux commands, please refer to the [FAQ](aganode_faq.md) page.
 
 * **Use admin privileges**: Our regular user has no admin privileges. If a command needs to edit the system configuration, we need to use the `sudo` ("superuser do") command as prefix. Instead of editing a system file with `nano /etc/fstab`, we use `sudo nano /etc/fstab`.   
   For security reasons, the user "bitcoin" cannot use the `sudo` command.
@@ -126,8 +119,8 @@ $ ls -la
 
 * **Copy / Paste**: If you are using Windows and the PuTTY SSH client, you can copy text from the shell by selecting it with your mouse (no need to click anything), and paste stuff at the cursor position with a right-click anywhere in the ssh window.
 
-### Connecting to the Pi
-Now it’s time to connect to the Pi via SSH and get to work. For that, a Secure Shell (SSH) client is needed. Install, start and connect:
+### Connecting to the ODROID
+Now it’s time to connect to the ODROID via SSH and get to work. For that, a Secure Shell (SSH) client is needed. Install, start and connect:
 
 - Windows: PuTTY ([Website](https://www.putty.org))
 - Mac OS: built-in SSH client (see [this article](http://osxdaily.com/2017/04/28/howto-ssh-client-mac/))
@@ -135,30 +128,16 @@ Now it’s time to connect to the Pi via SSH and get to work. For that, a Secure
 - Use the following SSH connection settings: 
   - host name: the static address you set in the router, eg. `192.168.0.20`
   - port: `22`
-  - username: `pi` 
-  - password:  `raspberry`.
+  - username: `root` 
+  - password:  `odroid`.
 
 ![login](images/20_login.png)
 
-:point_right: additional information: [using SSH with Raspberry Pi](https://www.raspberrypi.org/documentation/remote-access/ssh/README.md)
+:point_right: additional information: [using SSH with ODROID](https://www.raspberrypi.org/documentation/remote-access/ssh/README.md)
 
 ### Raspi-Config
 You are now on the command line of your own Bitcoin node. First we finish the Pi configuration. Enter the following command:  
 `$ sudo raspi-config`
-
-![raspi-config](images/20_raspi-config.png)
-
-* First, on `1` change your password to your `password [A]`.
-* Next, choose Update `8` to get the latest configuration tool
-* Network Options `2`: 
-  * you can give your node a cute name (like “RaspiBolt”) and
-  * configure your Wifi connection (Pi 3 only)
-* Boot Options `3`: 
-  * choose `Desktop / CLI` → `Console` and
-  * `Wait for network at boot`
-* Localisation `4`: set your timezone
-* Advanced `7`: run `Expand Filesystem` and set `Memory Split` to 16
-* Exit by selecting `<Finish>`, and `<No>` as no reboot is necessary
 
 ### Software update
 It is important to keep the system up-to-date with security patches and application updates. The “Advanced Packaging Tool” (apt) makes this easy:  
@@ -188,7 +167,7 @@ The bitcoin and lightning processes will run in the background (as a "daemon") a
 * Enter the following command, set your `password [A]` and confirm all questions with the enter/return key.  
   `$ sudo adduser bitcoin`
 
-### Mounting external hard disk
+### Mounting external hard disk - THIS NEEDS MUCH TESTING
 To store the blockchain, we need a lot of space. As a server installation, the Linux native file system Ext4 is the best choice for the external hard disk, so we will format the hard disk, erasing all previous data. The external hard disk is then attached to the file system and can be accessed as a regular folder (this is called “mounting”). 
 
 :warning: **Previous data on this hard disk will be deleted!**
@@ -306,70 +285,6 @@ The first measure is to install “fail2ban”, a service that cuts off any syst
 The initial configuration should be fine as it is enabled for SSH by default. If you want to dive deeper, you can  
 :point_right: [customize the configuration](https://linode.com/docs/security/using-fail2ban-for-security/).
 
-### Login with SSH keys
-One of the best options to secure the SSH login is to completely disable the password login and require a SSH key certificate. Only someone with physical possession of the private key can login. 
-
-**_Set up SSH keys for the "admin" user:_**
-
-**For Windows Users**: [Configure “No Password SSH Keys Authentication” with PuTTY on Linux Servers](https://www.tecmint.com/ssh-passwordless-login-with-putty)
-
-* You should have generated three new files. Keep them safe!
-
-![SSH keys files](images/20_ssh_keys_filelist.png)
-
-**For Mac / Linux Users:**
-
-* Back on the machine you’re working on (an easy way to make sure this is the case is to open a new tab in your terminal window) we first need to check for an existing private / public key pair:
-
-   `$ ls -la ~/.ssh/*.pub`
-
-* If files are listed, your public key should be one of the following files (by default):
-
-   ```
-   id_dsa.pub
-   id_ecdsa.pub
-   id_ed25519.pub
-   id_rsa.pub
-   ```
-* If one of these files exist, skip ahead to the "Let's make sure..." bullet point below. If none of those files exist, or you get a ` No such file or directory` do the following to create a new pair:
-  
-   `$ ssh-keygen -t rsa -b 4096`
-   * When you're prompted to "Enter a file in which to save the key," press Enter. This accepts the default file location.
-
-   * Next, to enforce key security, use password [A] to protect your keys. Enter again to confirm.
-
-* Let's make sure that the `~/.ssh` directory exists on the Raspberry pi (Be sure to swap the IP of your Raspberry Pi in for RASPBERRY_PI_IP below):
-
-   `ssh admin@RASPBERRY_PI_IP 'mkdir -p ~/.ssh'`
-
-* Copy over your public key to the Raspberry Pi and set the file mode of the .ssh directory (Again, swap out your Pi's IP for RASPBERRY_PI_IP below). If your public key file is something other than `id_rsa.pub`, substitute its filename below:
-
-   `$ cat ~/.ssh/id_rsa.pub | ssh admin@RASPBERRY_PI_IP 'cat >> ~/.ssh/authorized_keys && chmod -R 700 ~/.ssh/'`
-
-**Once the Raspberry Pi has a copy of your public key, we'll now disable password login:**
-
-* Log in to the Raspberry Pi as "admin" with your SSH key (you shouldn't be prompted for admin's password anymore).
-
-* Edit ssh config file  
-`$ sudo nano /etc/ssh/sshd_config`
-
-* Change settings "ChallengeResponseAuthentication" and "PasswordAuthentication" to "no" (uncomment the line by removing # if necessary)  
-  ![SSH config](images/20_ssh_config.png)
-
-* Save config file and exit 
-
-* Copy the SSH public key for user "root", just in case  
-  `$ sudo mkdir /root/.ssh`  
-  `$ sudo cp /home/admin/.ssh/authorized_keys /root/.ssh/`  
-  `$ sudo chown -R root:root /root/.ssh/`  
-  `$ sudo chmod -R 700 /root/.ssh/`  
-  `$ sudo systemctl restart ssh`  
-
-* Exit and log in again. You can no longer log in with "pi" or "bitcoin", only "admin" and "root" have the necessary SSH keys.  
-  `$ exit`
-
-:warning: **Backup your SSH keys!** You will need to attach a screen and keyboard to your Pi if you lose it.
-
 ### Increase your open files limit
 
 In case your RaspiBolt is swamped with internet requests (honest or malicious due to a DDoS attack), you will quickly encounter the `can't accept connection: too many open files` error. This is due to a limit on open files (representing individual tcp connections) that is set too low.
@@ -410,4 +325,4 @@ session required pam_limits.so
 
 ---
 
-Next: [Bitcoin >>](raspibolt_30_bitcoin.md)
+Next: [Bitcoin >>](aganode_30_bitcoin.md)

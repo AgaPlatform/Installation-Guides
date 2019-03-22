@@ -1,4 +1,4 @@
-# LN Node Guide
+# Aga Lightning Node Guides
 
 **AGA Lightning Node**  
 based on a Hardkernel Odroid HC2  

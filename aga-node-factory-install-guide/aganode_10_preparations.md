@@ -1,25 +1,19 @@
-[ [Intro](README.md) ] -- [ **Preparations** ] -- [ [Raspberry Pi](raspibolt_20_pi.md) ] -- [ [Bitcoin](raspibolt_30_bitcoin.md) ] -- [ [Lightning](raspibolt_40_lnd.md) ] -- [ [Mainnet](raspibolt_50_mainnet.md) ] -- [ [Bonus](raspibolt_60_bonus.md) ] -- [ [Troubleshooting](raspibolt_70_troubleshooting.md) ]
+[ [Intro](README.md) ] -- [ **Preparations** ] -- [ [ODROID-HC2](aganode_20_pi.md) ] -- [ [Bitcoin](aganode_30_bitcoin.md) ] -- [ [Lightning](aganode_40_lnd.md) ] -- [ [Mainnet](aganode_50_mainnet.md) ] -- [ [Bonus](aganode_60_bonus.md) ] -- [ [Troubleshooting](aganode_70_troubleshooting.md) ]
 
 -------
-### Beginner’s Guide to ️⚡Lightning️⚡ on a Raspberry Pi
+### Factory Guide ⚡ Lightning️ ⚡ on a ODROID-HC2
 --------
 
 # Preparations
 
 ## Hardware requirements
-This guide builds on the easily available and very flexible Raspberry Pi. This amazing piece of hardware is a tiny computer-on-a-chip, costs about $35 and consumes very little energy.
 
-![Raspberry Pi](images/10_raspberrypi_hardware.png)  
-*Raspberry Pi 3: a tiny computer for less than $40*
+* ODROID-HC2
+* Micro SD card: 8 GB
+* Power adapter: 5V/4A
+* SSD 500 GB
 
-It is advisable to get the latest Raspberry Pi for good performance:
-* Raspberry Pi 3 Model B or better
-* Micro SD card: 8 GB or more, incl. adapter to your regular computer
-* USB power adapter: 5V/1.2A (more ampere is fine) + Micro USB cable
-* External hard disk: 500 GB or more
-* Optional: Raspberry Pi case
-
-I used a Raspberry Pi 3 Model B and set it up with a 8 GB SD card. To run a Lightning node, the full Bitcoin blockchain must be stored locally, which is ~200 GB and growing. I bought a cheap hard disk enclosure and reused an old 500 GB hard disk that was lying around. A modern 2.5" hard disk that is powered by the USB connection to the Pi does work as well, as long as you use a decent power supply (2.5A+).
+I used an ODROID-HC2 and set it up with a 8 GB SD card. To run a Lightning node, the full Bitcoin blockchain must be stored locally, which is ~200 GB and growing. I matched it with one 500GB SATA SSD.
 
 ## Download the Bitcoin blockchain
 The Bitcoin blockchain records all transactions and basically defines who owns how many bitcoin. This is the most crucial of all information and we should not rely on someone else to provide this data. To set up our Bitcoin Full Node on mainnet, we need to
@@ -34,7 +28,7 @@ The Bitcoin blockchain records all transactions and basically defines who owns h
 Although we will set up the RaspiBolt for the Bitcoin testnet first, the validation of the Bitcoin mainnet blockchain can take several days. This is the reason why we already start this task now.
 
 ### Using a regular computer
-You can imagine that the Raspberry Pi is not quite up to this huge task. The download is not the problem, but to initially process the whole blockchain would take weeks or months due to its low computing power and lack of memory. We need to download and verify the blockchain with Bitcoin Core on a regular computer, and then transfer the data to the Pi. This needs to be done only once. After that the Pi can easily keep up with new blocks.
+You can imagine that the ODROID-HC2 is not quite up to this huge task. The download is not the problem, but to initially process the whole blockchain would take weeks or months due to its low computing power and lack of memory. We need to download and verify the blockchain with Bitcoin Core on a regular computer, and then transfer the data to the Pi. This needs to be done only once. After that the Pi can easily keep up with new blocks.
 
 This guide assumes that you will use a  Windows machine for this task, but it works with most operating systems. You need to have about 250 GB free disk space available, internally or on an external hard disk (but not the one reserved for the Pi). As indexing creates heavy read/write traffic, the faster your hard disk the better. An internal drive or an external USB3 hard disk will be significantly faster than one with a USB2 connection.
 
@@ -78,4 +72,4 @@ Save and close the text file, quit Bitcoin Core using `File` / `Exit` and restar
 Let the blockchain sync for now, we can already start working on the Pi.
 
 ---
-Next: [Raspberry Pi >>](raspibolt_20_pi.md)
+Next: [ODROID-HC2 >>](aganode_20_pi.md)
