@@ -4,7 +4,7 @@
 ### Beginner’s Guide to ️⚡Lightning️⚡ on a Raspberry Pi
 --------
 
-# ODROID-UC2
+# ODROID-HC2
 
 ## Write down your passwords
 You will need several passwords and I find it easiest to write them all down in the beginning, instead of bumping into them throughout the guide. They should be unique and very secure, at least 12 characters in length. Do **not use uncommon special characters**, spaces or quotes (‘ or “).
