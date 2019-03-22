@@ -11,8 +11,9 @@ You will need several passwords and I find it easiest to write them all down in 
 ```
 [ A ] root user password
 [ B ] admin user password
-[ C ] Bitcoin RPC password
-[ D ] LND wallet password
+[ C ] bitcoin user password
+[ D ] Bitcoin RPC user and password
+[ E ] LND wallet password
 ```
 
 If you need inspiration for creating your passwords: the [xkcd: Password Strength](https://xkcd.com/936/) comic is funny and contains a lot of truth. Store a copy of your passwords somewhere safe (preferably in a password manager like [KeePass](https://keepass.info/)) and keep your original notes out of sight once your system is up and running.
