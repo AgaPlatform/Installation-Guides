@@ -136,10 +136,6 @@ Now it’s time to connect to the ODROID via SSH and get to work. For that, a Se
 
 :point_right: additional information: [using SSH with ODROID](https://www.raspberrypi.org/documentation/remote-access/ssh/README.md)
 
-### Raspi-Config
-You are now on the command line of your own Bitcoin node. First we finish the Pi configuration. Enter the following command:  
-`$ sudo raspi-config`
-
 ### Software update
 It is important to keep the system up-to-date with security patches and application updates. The “Advanced Packaging Tool” (apt) makes this easy:  
 `$ sudo apt-get update`  
